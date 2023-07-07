@@ -82,7 +82,7 @@ const ohMy = () => {
     // YOUR CODE HERE
     axios.get('http://localhost:3000/animals').then((res) => {
         // console.log(res.data)
-        for (i = 0; i < res.data.length; i++) {
+        for (let i = 0; i < res.data.length; i++) {
             const para = document.createElement("p");
             para.textContent = res.data[i];
             document.body.append(para)
@@ -141,13 +141,14 @@ document.getElementById("repeat-button").addEventListener("click", repeatMyParam
 
 // CODE HERE
 const myQuery = () => {
-    axios.get('http://localhost:3000/myaction?search=dumplings&rescue=soysauce')
+    axios.get('http://localhost:3000/testquery?search=dumplings&rescue=soysauce')
     .then((res) => {
         console.log(res.data);
     })
+    .catch(error => console.log(error))
 }
 
-document.getElementById('query-button').addEventListener("click", myQuery);
+document.querySelector('#query-button').addEventListener("click", myQuery);
 
 
 ////////////////
@@ -200,3 +201,32 @@ document.getElementById('query-button').addEventListener("click", myQuery);
 */
 
 // CODE HERE 
+
+let foodInput = document.querySelector('#foodInput')
+let foodForm = document.querySelector('#foodForm')
+let foodList = document.querySelector('#foodList')
+
+function newFoodHandler(evt){
+    evt.preventDefault()
+    let body = {
+        newFood: foodInput.value
+    }
+
+    axios.post(`http://localhost:3000/food`, body)
+    .then(res => {
+        console.log(res.data)
+        foodList.textContent = ''
+        for(let i = 0; i < res.data.length; i++) {
+            displayFoods(res.data[i])
+        }
+    })
+    .catch(err => console.log(err))
+}
+
+function displayFoods(food){
+    let foodItem = document.createElement('li');
+    foodItem.textContent = food;
+    foodList.appendChild(foodItem)
+}
+
+foodForm.addEventListener('submit', newFoodHandler)
